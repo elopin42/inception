@@ -14,6 +14,16 @@ services:
       - inception
     restart: always
 
+  mariadb:
+    container_name: mariadb
+    build: ./requirements/mariadb
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - inception
+    env_file:
+      - .env
+
   wordpress:
     build: ./requirements/wordpress
     container_name: wordpress
@@ -27,20 +37,23 @@ services:
       - inception
     depends_on:
       - mariadb
-
-  mariadb:
-    container_name: mariadb
-    build: ./requirements/mariadb
-    volumes:
-      - db_data:/var/lib/mysql
-    networks:
-      - inception
     env_file:
       - .env
 
+
 volumes:
-  db_data:
   wp_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/elopin/data/wordpress
+  db_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/elopin/data/mariadb
 
 networks:
   inception:

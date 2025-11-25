@@ -1,2 +1,6 @@
-[mysql]
+[mysqld]
 bind-address = 0.0.0.0
+
+datadir = /var/lib/mysql
+socket = /run/mysqld/mysqld.sock
+pid-file = /run/mysqld/mysqld.pid
