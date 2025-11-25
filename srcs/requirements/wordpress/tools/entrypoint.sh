@@ -1,15 +1,27 @@
 #!/bin/bash
-cd /var/www/html
+set -eu
 
-# attend que MariaDB soit prêt
-until mysql -h${WORDPRESS_DB_HOST} -u${WORDPRESS_DB_USER} -p${WORDPRESS_DB_PASSWORD} -e "SELECT 1;" &>/dev/null; do
-  echo "Waiting for MariaDB..."
+echo "[WordPress setup] Waiting for MariaDB…"
+until mysql -h"$WORDPRESS_DB_HOST" -u"$WORDPRESS_DB_USER" -p"$WORDPRESS_DB_PASSWORD" -e "SHOW DATABASES;" >/dev/null 2>&1; do
+  echo "MariaDB is not ready yet…"
   sleep 2
 done
 
-if [ ! -f wp-config.php ]; then
-  wp config create --dbname=${WORDPRESS_DB_NAME} --dbuser=${WORDPRESS_DB_USER} --dbpass=${WORDPRESS_DB_PASSWORD} --dbhost=${WORDPRESS_DB_HOST} --allow-root
-  wp core install --url="https://${DOMAIN_NAME}" --title="Inception Site" --admin_user=${WP_ADMIN} --admin_password=${WP_ADMIN_PWD} --admin_email=${WP_ADMIN_EMAIL} --allow-root
+echo "[WordPress setup] Configuring WordPress"
+
+# Config PHP-FPM
+if ! grep -q "listen = 0.0.0.0:9000" /etc/php/8.2/fpm/pool.d/www.conf; then
+  echo "listen = 0.0.0.0:9000" >>/etc/php/8.2/fpm/pool.d/www.conf
 fi
 
-php-fpm8.2 -F
+# Config wp-config
+sed -i "s/username_here/$WORDPRESS_DB_USER/g" /var/www/wordpress/wp-config-sample.php
+sed -i "s/password_here/$WORDPRESS_DB_PASSWORD/g" /var/www/wordpress/wp-config-sample.php
+sed -i "s/localhost/$WORDPRESS_DB_HOST/g" /var/www/wordpress/wp-config-sample.php
+sed -i "s/database_name_here/$WORDPRESS_DB_NAME/g" /var/www/wordpress/wp-config-sample.php
+
+cp /var/www/wordpress/wp-config-sample.php /var/www/wordpress/wp-config.php
+chown -R www-data:www-data /var/www/wordpress
+
+# Lancer PHP-FPM
+exec php-fpm8.2 -F

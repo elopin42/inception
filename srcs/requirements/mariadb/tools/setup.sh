@@ -16,7 +16,7 @@ chown -R mysql:mysql /run/mysqld
 DB_DIR="/var/lib/mysql"
 
 # -------------------------- INIT DB --------------------------
-if [ ! -d "$DB_DIR/${MYSQL_DATABASE}" ]; then
+if [ ! -d "$DB_DIR/mysql" ]; then
   echo "[MariaDB] Initializing database directory..."
   mariadb-install-db --user=mysql --datadir="$DB_DIR"
 

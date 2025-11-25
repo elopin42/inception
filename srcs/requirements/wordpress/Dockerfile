@@ -15,17 +15,17 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 # Préparer WordPress
 RUN mkdir -p /var/www/html && chown -R www-data:www-data /var/www/html
 
-COPY tools/entrypoint.sh /entrypoint.sh
+COPY ./tools/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 EXPOSE 9000
 
-RUN wget https://wordpress.org/latest.zip -P /tmp \
-    && unzip /tmp/latest.zip -d /tmp \
-    && cp -r /tmp/wordpress/* /var/www/html/ \
-    && chown -R www-data:www-data /var/www/html
 
-COPY tools/wp-config.php /var/www/html/wp-config.php
+RUN mkdir -p /var/www \
+	&& wget https://wordpress.org/latest.tar.gz -O /tmp/wordpress.tar.gz \
+	&& tar -xvf /tmp/wordpress.tar.gz -C /var/www/ \
+	&& chown -R www-data:www-data /var/www/wordpress \
+	&& rm /tmp/wordpress.tar.gz
 
 ENTRYPOINT ["/entrypoint.sh"]
 
