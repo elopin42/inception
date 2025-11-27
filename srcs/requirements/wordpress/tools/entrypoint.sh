@@ -3,6 +3,7 @@ set -eu
 
 echo "[WordPress setup] Waiting for MariaDB…"
 until mysql -h"$WORDPRESS_DB_HOST" -u"$WORDPRESS_DB_USER" -p"$WORDPRESS_DB_PASSWORD" -e "SHOW DATABASES;" >/dev/null 2>&1; do
+  echo $WORDPRESS_DB_HOST $WORDPRESS_DB_USER $WORDPRESS_DB_PASSWORD
   echo "MariaDB is not ready yet…"
   sleep 2
 done

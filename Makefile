@@ -7,6 +7,9 @@ $(FOLDERS):
 all:$(FOLDERS)
 	docker-compose -f srcs/docker-compose.yml up --build
 
+run:$(FOLDERS)
+	docker-compose -f srcs/docker-compose.yml up --build
+
 logs:
 	docker-compose -f srcs/docker-compose.yml logs
 

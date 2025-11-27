@@ -28,4 +28,4 @@ RUN mkdir -p /var/www \
 	&& rm /tmp/wordpress.tar.gz
 
 ENTRYPOINT ["/entrypoint.sh"]
-
+CMD ["php-fpm8.2", "-F"]
