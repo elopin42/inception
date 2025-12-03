@@ -1,0 +1,50 @@
+Maintenant que tu as :
+
+* Ton **Makefile fonctionnel**
+* Ton **docker-compose.yml** pointant vers les bons dossiers
+* Tes **Dockerfile de base** pour nginx, mariadb, wordpress
+
+Tu peux attaquer **l’étape suivante : construire les conteneurs minimums avec leur configuration**.
+
+---
+
+### **Étapes logiques à suivre :**
+
+1. **MariaDB**
+
+   * Installer MariaDB dans le conteneur.
+   * Configurer la base WordPress.
+   * Ajouter deux utilisateurs (dont l’admin) via variables d’environnement ou script d’initialisation.
+   * Créer un **volume** pour la base (`/var/lib/mysql` → `/home/login/data/db`).
+
+2. **WordPress**
+
+   * Installer PHP + php-fpm.
+   * Configurer WordPress pour qu’il se connecte à MariaDB.
+   * Créer un **volume** pour les fichiers (`/var/www/html` → `/home/login/data/www`).
+
+3. **NGINX**
+
+   * Configurer pour qu’il serve WordPress via php-fpm.
+   * Activer **TLS 1.2 ou 1.3**.
+   * C’est le seul point d’entrée, sur le port 443.
+   * Ajouter le réseau Docker pour relier tous les conteneurs.
+
+4. **.env et secrets**
+
+   * Stocker les mots de passe et variables sensibles dans `.env` et/ou Docker secrets.
+   * Ne jamais les mettre directement dans les Dockerfile.
+
+5. **Tester les conteneurs**
+
+   * `make` → vérifier qu’ils se lancent correctement.
+   * Vérifier que WordPress peut se connecter à la base.
+   * Vérifier que NGINX sert WordPress via HTTPS.
+
+---
+
+En gros, tu passes maintenant de **“structure vide”** → **“conteneurs fonctionnels minimum”**.
+Quand ça fonctionne, tu peux ensuite ajouter **les bonus et ajustements avancés**.
+
+Si tu veux, je peux te donner **un mini plan avec l’ordre exact pour chaque conteneur** pour que tu ne bloques jamais. Veux‑tu que je fasse ça ?
+

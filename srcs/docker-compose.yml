@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  nginx:
+    build: ./requirements/nginx
+    container_name: nginx
+    ports:
+      - "443:443"
+    volumes:
+      - wp_data:/var/www/html
+    depends_on:
+      - wordpress
+    networks:
+      - inception
+    restart: always
+
+  mariadb:
+    container_name: mariadb
+    build: ./requirements/mariadb
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - inception
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: always
+
+
+  wordpress:
+    build: ./requirements/wordpress
+    container_name: wordpress
+    env_file:
+      - .env
+    expose:
+      - "9000"
+    volumes:
+      - wp_data:/var/www/html
+    networks:
+      - inception
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    env_file:
+      - .env
+
+volumes:
+  wp_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/elopin/data/wordpress
+  db_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/elopin/data/mariadb
+
+networks:
+  inception:
+
