@@ -1,19 +1,27 @@
 
-FOLDERS = ~/data/mariadb ~/data/wordpress
+FOLDERS = $(home)/data/mariadb $(home)/data/wordpress
+COMPOSE = docker-compose -f srcs/docker-compose.yml
+
+.PHONY: all run logs clean fclean re dirs 
+
+dirs: $(FOLDERS)
 
 $(FOLDERS):
 	mkdir -p $@
 
-all:$(FOLDERS)
-	docker-compose -f srcs/docker-compose.yml up --build
+all: dirs
+	$(COMPOSE) up --build
 
 run:$(FOLDERS)
-	docker-compose -f srcs/docker-compose.yml up -d
+	$(COMPOSE) up -d
 
 logs:
-	docker-compose -f srcs/docker-compose.yml logs
+	$(COMPOSE) logs -f
 
 clean:
-	docker-compose -f srcs/docker-compose.yml down -v
+	$(COMPOSE) down -v
 
-re : clean all
+flcnan: clean
+	rm -rf $(FOLDERS)
+
+re : fclean all
