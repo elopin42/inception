@@ -1,6 +1,7 @@
 FROM debian:bookworm
 
-RUN apt update && apt install -y nginx openssl
+RUN apt-get update && apt-get install -y nginx openssl \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /etc/nginx/ssl
 
@@ -11,4 +12,4 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -out /etc/nginx/ssl/nginx.crt \
     -subj "/C=FR/L=Paris/O=42/OU=student/CN=elopin.42.fr"
 
-CMD ["sh", "-c", "sleep 40 && nginx -g 'daemon off;'"]
+CMD ["nginx", "-g", "daemon off;"]
