@@ -31,7 +31,7 @@ fi
 # Create second user (non-admin)
 if ! wp user get "$WP_USER" --allow-root > /dev/null 2>&1; then
   wp user create "$WP_USER" "$WP_USER_EMAIL" \
-    --role=author --user_pass="userpass42" --allow-root
+    --role=author --user_pass="$WP_USER_PWD" --allow-root
 fi
 
 echo "[WordPress setup] Done"
