@@ -111,10 +111,6 @@ inception/
 ├── USER_DOC.md
 ├── DEV_DOC.md
 ├── .gitignore
-├── secrets/                      # NOT committed to git
-│   ├── credentials.txt
-│   ├── db_password.txt
-│   └── db_root_password.txt
 └── srcs/
     ├── .env                      # NOT committed to git
     ├── docker-compose.yml

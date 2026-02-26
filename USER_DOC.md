@@ -52,15 +52,8 @@ Credentials are stored securely and are NOT committed to the git repository:
 
 | File | Content |
 |------|---------|
-| `secrets/credentials.txt` | WordPress admin password |
-| `secrets/db_password.txt` | Database user password |
-| `secrets/db_root_password.txt` | Database root password |
 | `srcs/.env` | Non-sensitive configuration (usernames, domain, DB name) |
 
-To change a password:
-1. Edit the corresponding file in `secrets/`
-2. Remove existing data: `make fclean`
-3. Rebuild: `make`
 
 ## Checking Services
 
